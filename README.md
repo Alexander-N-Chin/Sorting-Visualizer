@@ -25,6 +25,6 @@ Instructions on how to run the program:
 
 ## Demo
 Quick sort:
-```
+
 ![](ezgif.com-gif-maker.gif)
-```
+
