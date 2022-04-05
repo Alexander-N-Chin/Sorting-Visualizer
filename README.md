@@ -24,5 +24,14 @@ Instructions on how to run the program:
 
 
 ## Demo
+Bubble sort:
+![](ezgif.com-gif-maker (3).gif)
 
+Insertion sort:
+![](ezgif.com-gif-maker (2).gif)
+
+Selection sort:
+![](ezgif.com-gif-maker (1).gif)
+
+Quick sort:
 ![](ezgif.com-gif-maker.gif)
