@@ -23,6 +23,7 @@ Instructions on how to run the program:
 ```
 ## Flowchart
 Flowchart pdf can be found in files of accessed via Figma:
+
 https://www.figma.com/file/NjuWGJoBs5kXJXKhUUq44O/Sorting-Visualizer-Flowchart?node-id=0%3A1
 
 ## Demo
