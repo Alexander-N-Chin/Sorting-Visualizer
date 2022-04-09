@@ -29,5 +29,5 @@ https://www.figma.com/file/NjuWGJoBs5kXJXKhUUq44O/Sorting-Visualizer-Flowchart?n
 ## Demo
 Quick sort:
 
-![](ezgif.com-gif-maker.gif)
+![](QuickSortGif.gif)
 
