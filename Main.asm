@@ -57,6 +57,7 @@ main:
 		la	$a0, array
 		draw_all_col ($a0, $0)
 		
+		#print welcome and instruction messages
 		dprintstrlabel(welcomeMsg)
 		dprintstrlabel(displayInstructions)
 		dprintstrlabel(keyboardInstructions)
@@ -136,6 +137,7 @@ quickSort:
 		#play sound sweep
 		sweep($a0)		
 		j 	mainLoop
+		
 #generate array of object pointers		
 #$a0 = size
 GenerateArray:
@@ -152,13 +154,13 @@ GenerateArray:
 GenerateArrayLoop:
 		bge	$t0, $s1, GenerateArrayLoopExit
 		AllocateDMemory(ObjSpace)
-		sw	$v0, ($t1)
+		sw	$v0, ($t1)				#save new object pointer into array space
 		move $s0, $v0
 		random_int(maxSize)		#generate random number between 0-100 in $a0
 		addi	$a0, $a0, 1			#min = 1
 		sw	$a0, ($s0)				#save as height
 		sll	$a0, $a0, 1
-		addi	$a0, $a0, baseColor
+		addi	$a0, $a0, baseColor	#offset height to be used as color
 		sw	$a0, 4($s0)			#save color
 		sw	$t0, 8($s0)			#save x val
 		#increment pointers	

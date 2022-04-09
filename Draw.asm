@@ -13,6 +13,7 @@
 .eqv 		scanColor	0x00ff00
 
 #draw pixel given coordinate and color
+#input: x position, y position, color in hex
 .macro draw_pixel (%x, %y, %colorHex)
 		#save to stack
 		subi	$sp, $sp, 12
@@ -36,6 +37,7 @@
 .end_macro
 
 #draw colomn at x 
+#input: x position, height, and hex color
 .macro draw_col (%x, %height, %color)
 		#save to stack
 		subi	$sp, $sp, 16
@@ -45,14 +47,14 @@
 		sw	$t4, 12($sp)		
 		
 		#align x
-		addi	$s7, %x, xOffset
+		addi	$s7, %x, xOffset				#offsets to align columns in display
 		li	$t3, 0
 		li	$t4, yOffset
 drawColLoop:
-		bge	$t3, %height, drawColLoopExit
-		sub	$t2, $t4, $t3
-		draw_pixel($s7, $t2, %color)
-		addi	$t3, $t3, 1
+		bge	$t3, %height, drawColLoopExit	#while i < height
+		sub	$t2, $t4, $t3					#y offset - i
+		draw_pixel($s7, $t2, %color)			#draw pixel at adjusted coordinates
+		addi	$t3, $t3, 1					#increment i
 		j	drawColLoop
 drawColLoopExit:
 
@@ -76,18 +78,18 @@ drawColLoopExit:
 
 		li	$t5, 0		
 drawAllColLoop:
-		lw	$t7, (%array)		#object pointer
-		beq	$t7, $0, drawAllColLoopExit
-		lw	$t7, (%array)		#object pointer (do it again bc it changes for some reason)
-		lw	$t9, ($t7)			#height
-		bne	%black, $0, isblack
-		lw	$t8, 4($t7)		#color
+		lw	$t7, (%array)				#object pointer
+		beq	$t7, $0, drawAllColLoopExit	#while object pointer exists
+		lw	$t7, (%array)				#object pointer (do it again bc it changes for some reason)
+		lw	$t9, ($t7)					#height
+		bne	%black, $0, isblack			#jump if black flag is on
+		lw	$t8, 4($t7)				#load color from object
 		j 	isblackExit
 isblack:
-		move $t8, $0
+		move $t8, $0					#change color to black
 isblackExit:
-		draw_col($t5, $t9, $t8)
-		addi	%array, %array, 4
+		draw_col($t5, $t9, $t8)			#draw column at adjusted x and y 
+		addi	%array, %array, 4			#increment array pointer
 		addi	$t5, $t5, 2
 		j	drawAllColLoop
 drawAllColLoopExit:

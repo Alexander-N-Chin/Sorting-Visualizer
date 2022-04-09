@@ -4,6 +4,7 @@
 #	Sorting Macro Sheet
 #############################################
 #sweep through array once and play sound
+#input: array address
 .macro sweep (%array)
 		#save to stack 
 		subi	$sp, $sp, 24
@@ -41,6 +42,9 @@ sweepLoopExit:
 		addi	$sp, $sp, 24
 .end_macro
 
+#randomize existing array
+#input: array address
+#output: end address of array in $v1
 .macro randomize (%array)
 		#save to stack 
 		subi	$sp, $sp, 16
@@ -115,12 +119,12 @@ randomizeLoopExit:
 InsSortOuterLoop:	
 		move $t2, $t1			#i = j
 		move $s2, $s1
-		lw	$t3, ($s1)			#load array pointer
+		lw	$t3, ($s1)			#load object pointer
 		ble	$t3, $0, InsSortOuterLoopExit	#while i < length
 		lw	$t5, 8($t3)		#load x	
 		sll	$t5, $t5, 1
 		lw	$a2, ($t3)			#load height
-		draw_col($t5, $a2, $a3)
+		draw_col($t5, $a2, $a3)	#select current col 
 InsSortInnerLoop:	
 		lw	$t6, ($s2)			#load array pointer of j
 		lw	$t7, ($t6)			#load height of j
@@ -159,9 +163,7 @@ InsSortInnerLoopExit:
 		addi	$t1, $t1, 1		#i = i + 1
 		addi	$s1, $s1, 4
 		j	InsSortOuterLoop
-InsSortOuterLoopExit:	
-		move $a0, %array
-		draw_all_col ($a0, $0)
+InsSortOuterLoopExit:
 			
 		#restore from stack
 		lw	$s0, ($sp)
@@ -273,7 +275,7 @@ bubbleSortOuterLoopExit:
 #output: number of swaps in $v1
 .macro selection_sort (%array)
 		#save to stack
-		subi	$sp, $sp, 68
+		subi	$sp, $sp, 76
 		sw	$t0, ($sp)
 		sw	$t1, 4($sp)
 		sw	$t2, 8($sp)
@@ -291,6 +293,8 @@ bubbleSortOuterLoopExit:
 		sw	$a1, 56($sp)
 		sw	$a2, 60($sp)
 		sw	$a3, 64($sp)
+		sw	$k0, 68($sp)
+		sw	$k1, 72($sp)
 
 		#initialize variables before loop
 		li	$v1, 0			#swap counter
@@ -319,30 +323,29 @@ SelSortOuterLoop:
 		move $k1, $t7
 		move $s6, $t8
 SelSortInnerLoop:	
-		lw	$t4, ($s2)
+		lw	$t4, ($s2)			#load object j
 		ble	$t4, $0, SelSortInnerLoopExit
 		lw	$t0, ($t4)			#load height of j
 		lw	$t5, 4($t4)		#load color of j
 		lw	$t9, 8($t4)		#load x of j
 		sll	$t9, $t9, 1
-		move $s4, $t0
+		move $s4, $t0			#set contents of j to scanner
 		move $k1, $t5
 		move $s6, $t9
 		draw_col($s6, $s4, $k0)	#color new scanner
 		addi	$v1, $v1, 1		#increment comparison counter
 		pause(5)
-		bge	$t0, $t6, minExit
+		bge	$t0, $t6, minExit	#compare scanner and current min
 		draw_col($t8, $t6, $t7)	#recolor old min
-		draw_col($a3, $a1, $s0) #draw i again
+		draw_col($a3, $a1, $s0) #draw i 
 		
 		#change min to j
 		move $t6, $t0			
 		move $t7, $t5
 		move $t8, $t9
 		move $s5, $t4	
-		draw_col($t8, $t6, $s0) 
 minExit:
-		addi	$s2, $s2, 4
+		addi	$s2, $s2, 4		#increment j
 		draw_col($s6, $s4, $k1)	#recolor old scanner
 		draw_col($t8, $t6, $s0) 	#reselect min
 		j	SelSortInnerLoop 
@@ -379,8 +382,10 @@ SelSortOuterLoopExit:
 		lw	$a0, 52($sp)
 		lw	$a1, 56($sp)
 		lw	$a2, 60($sp)
-		lw	$a3, 64($sp)	
-		addi	$sp, $sp, 68
+		lw	$a3, 64($sp)
+		lw	$k0, 68($sp)
+		lw	$k1, 72($sp)	
+		addi	$sp, $sp, 76
 .end_macro
 
 
